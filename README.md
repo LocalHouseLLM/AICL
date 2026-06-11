@@ -1,187 +1,364 @@
-# AICL — Adaptive Inter-Module Communication Language
-### High-Performance Communication Protocol for Modular AI Systems  
-**Author:** Vansh Bukkarwal — LocalHouseLLM Project  
-**License:** Mozilla Public License 2.0 (MPL-2.0)
+# AICL
+
+### Adaptive Inter-Module Communication Language
+
+A lightweight, extensible communication and orchestration framework for modular AI systems.
+
+![Python](https://img.shields.io/badge/python-3.9%2B-blue)
+![License](https://img.shields.io/badge/license-MPL--2.0-green)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
 
 ---
 
-## 🚀 Overview
+## Overview
 
-AICL (Adaptive Inter-Module Communication Language) is a **high-performance symbolic communication protocol** designed for modular AI architectures — including ANVIRA, AMA-MRL, hierarchical agent systems, distributed reasoning engines, and model-agnostic AI pipelines.
+AICL (Adaptive Inter-Module Communication Language) is an open-source framework designed to simplify communication between AI modules, agents, reasoning systems, memory systems, and orchestration components.
 
-AICL enables AI modules to:
+Instead of tightly coupling every component together, AICL provides a standardized packet-based communication layer, intelligent routing, service discovery, health monitoring, and safety middleware.
 
-- Communicate using a **compact symbolic language**  
-- Exchange structured messages with **zero ambiguity**  
-- Route tasks dynamically with **high concurrency**  
-- Enforce safety rules and policies  
-- Register, orchestrate, and monitor modules cleanly  
-
-AICL functions as the **nervous system** of an AI, connecting reasoning units, safety layers, translators, memory systems, and self-learning modules.
+Think of AICL as the communication backbone of a modular AI architecture.
 
 ---
 
-## 📦 Features
+## Why AICL?
 
-### 📨 AICL Packet System
-- Efficient symbolic message format  
-- Intent, confidence, metadata, and tracing baked in  
-- Self-validating packets with error reporting  
-- Merge & transform operations  
-- AI-friendly minimal overhead design  
+As AI systems become more complex, they are increasingly built from multiple specialized components:
 
-### 🔀 Router
-- Concurrent dispatch (sync + async modules)  
-- Directed routing / broadcast / multicast  
-- Timeout, retry, and backoff support  
-- Pre-route and post-route safety hooks  
-- Async inbox system for worker modules  
+* Reasoning engines
+* Memory systems
+* Planning agents
+* Safety layers
+* Tool integrations
+* Knowledge retrieval modules
+* Local and cloud models
 
-### 📚 Registry
-- Persistent module registry  
-- Metadata, capabilities, and health status  
-- Automatic integrity checks  
-- JSON or DB storage adapters  
+Managing communication between these components quickly becomes difficult.
 
-### 🛡 Safety System
-- Rule-based packet validation  
-- Blocking, mutation, or passthrough modes  
-- System-wide safety enforcement  
-- Rogue module protection  
+AICL provides:
 
-### 🧰 Utility Helpers
-- High-precision timestamps  
-- UUID-based packet IDs  
-- Freeze / unfreeze utilities  
-- Zero extra dependencies  
+* Structured packet communication
+* Dynamic module discovery
+* Concurrent routing
+* Safety enforcement
+* Health monitoring
+* Extensible architecture
 
 ---
 
-## 🗂 Directory Structure
+## Core Architecture
 
-AICL/
-│
-├── init.py
-├── packet.py
-├── router.py
-├── registry.py
-├── safety.py
-└── utils/
-├── init.py
-└── helpers.py
-LICENSE
-README.md
+```text
+                    ┌──────────────┐
+                    │ Application  │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │ Safety Layer │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │    Router    │
+                    └──────┬───────┘
+                           │
+         ┌─────────────────┼─────────────────┐
+         ▼                 ▼                 ▼
+  ┌──────────┐      ┌──────────┐      ┌──────────┐
+  │ Memory   │      │ Reasoner │      │ Planner  │
+  └──────────┘      └──────────┘      └──────────┘
 
+          Registry + Health Monitoring
+```
 
 ---
 
-## 🔧 Installation
+# Features
 
-### From source:
+## AICL Packet System
 
-```bash
-git clone https://github.com/localhousellm/AICL.git
-cd AICL
+The packet system provides a structured communication format between modules.
 
-(Future) PyPI:
-pip install aicl
+Features:
 
+* Packet validation
+* Metadata support
+* Trace tracking
+* Intent tagging
+* Confidence tracking
+* Packet merging
+* Immutable-safe operations
 
-🧪 Minimal Example
-Creating and sending a packet
-from AICL import AICLPacket, Router
+---
 
-router = Router()
+## Router
 
-def echo(pkt):
-    return AICLPacket(
-        origin="echo",
-        symbols=[f"Echo: {pkt.symbols}"]
-    )
+Concurrent packet routing engine.
 
-router.register_module("echo_module", echo)
+Features:
 
-p = AICLPacket(origin="user", symbols=["hello", "world"])
-resp = router.request_response(p, target="echo_module")
+* ThreadPool-based execution
+* Directed routing
+* Broadcast messaging
+* Multicast messaging
+* Timeout handling
+* Retry logic
+* Exponential backoff
+* Health-aware routing
+* Middleware hooks
 
-print(resp.pretty())
+---
 
+## Registry
 
-🛡 Safety Example
-from AICL import SafetyRules, SafetyViolation
+Thread-safe module registry with persistence.
+
+Features:
+
+* Module registration
+* Capability discovery
+* Priority-based selection
+* Tags and metadata
+* Heartbeat monitoring
+* Health tracking
+* Event subscriptions
+* Persistent storage
+
+---
+
+## Safety Layer
+
+Two-tier safety architecture.
+
+### Tier 1 — Safety Rules
+
+Simple rule engine for lightweight validation.
+
+```python
+from aicl import SafetyRules
 
 rules = SafetyRules()
 
-# Block packets containing a forbidden keyword
 rules.add_rule(
     lambda p: "forbidden" not in p.symbols
-    or SafetyViolation("Forbidden term detected")
 )
 
-packet = AICLPacket(origin="test", symbols=["this", "is", "forbidden"])
+rules.enforce(packet)
+```
 
-try:
-    rules.enforce(packet)
-except SafetyViolation as v:
-    print("Blocked:", v)
+### Tier 2 — Safety Layer
 
-🔌 Example Module Adapter
-handler = Router.make_module_adapter_from_callable(
-    lambda text: text.upper(),
-    name="upper_module"
+Production-grade middleware.
+
+Features:
+
+* Rate limiting
+* Replay detection
+* Duplicate suppression
+* Sensitive pattern scanning
+* Blacklist filtering
+* Loop detection
+* Audit logging
+* Kill switch support
+* Optional ML safety hooks
+
+---
+
+# Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/LocalHouseLLM/AICL.git
+cd AICL
+```
+
+Install locally:
+
+```bash
+pip install -e .
+```
+
+Future PyPI release:
+
+```bash
+pip install aicl
+```
+
+---
+
+# Quick Start
+
+## Creating a Packet
+
+```python
+from aicl import AICLPacket
+
+packet = AICLPacket(
+    origin="user",
+    symbols=["hello", "world"]
+)
+```
+
+---
+
+## Registering a Module
+
+```python
+from aicl import Router
+
+router = Router()
+
+def echo(packet):
+    return packet
+
+router.register_module(
+    "echo",
+    echo,
+    capabilities=["chat"]
+)
+```
+
+---
+
+## Sending a Packet
+
+```python
+packet = AICLPacket(
+    origin="user",
+    symbols=["hello"]
 )
 
-router.register_module("upper", handler)
+response = router.request_response(
+    packet,
+    target="echo"
+)
 
+print(response.pretty())
+```
 
-📈 Vision
+---
 
-AICL is designed to act as the communication backbone for:
-Adaptive Modular AI (AMA)
-ANVIRA Cognitive Architecture
-LocalHouseLLM multi-agent systems
-Distributed reasoning clusters
-Edge-device AI orchestration
+## Using Capability Routing
 
-AICL is built for:
+```python
+router.register_module(
+    "reasoner",
+    reason,
+    capabilities=["reason"]
+)
 
-Speed
-Clarity
-Debuggability
-Safety
-Extensibility
+packet.intent = "reason"
 
-This is the 1.0.0 foundational release, prepared for public open-source use.
+responses = router.send(packet)
+```
 
+The router automatically discovers compatible modules.
 
-🤝 Contributing
+---
 
-Contributions are welcome!
+## Safety Middleware
 
-You can submit PRs for:
-New routing strategies
-Additional safety rules
+```python
+from aicl import Router
+from aicl import SafetyLayer
 
-Packet extensions
-Async optimizations
-Documentation and examples
-Tooling & integrations
-MPL-2.0 ensures contributors keep credit while allowing open evolution.
+safety = SafetyLayer()
 
+router = Router(
+    pre_route_hook=safety.pre_route,
+    post_route_hook=safety.post_route
+)
+```
 
-📜 License
+---
+
+# Example Use Cases
+
+AICL can be used for:
+
+* Multi-agent systems
+* Modular AI architectures
+* Local AI orchestration
+* Research platforms
+* Autonomous workflows
+* Tool-calling systems
+* Distributed reasoning experiments
+* AI safety experimentation
+
+---
+
+# Roadmap
+
+## Current
+
+* Packet communication
+* Concurrent routing
+* Persistent registry
+* Health monitoring
+* Safety middleware
+
+## Planned
+
+* AICL Symbol Language (AICL-SL)
+* Binary packet encoding
+* Distributed transports
+* Scheduler subsystem
+* Observability dashboard
+* Advanced orchestration primitives
+
+---
+
+# Performance Philosophy
+
+AICL focuses on:
+
+* Simplicity
+* Low overhead
+* Debuggability
+* Safety
+* Extensibility
+
+The goal is not to replace existing AI frameworks, but to provide a clean communication layer that can connect them together.
+
+---
+
+# Contributing
+
+Contributions are welcome.
+
+Areas of interest:
+
+* Routing strategies
+* Safety mechanisms
+* Distributed transports
+* Documentation
+* Benchmarks
+* Integrations
+* Testing
+
+Pull requests and discussions are encouraged.
+
+---
+
+# License
 
 This project is licensed under the Mozilla Public License 2.0 (MPL-2.0).
-Modifications to AICL source files must be shared, but your project built on top of AICL can be proprietary.
 
+You may build proprietary systems on top of AICL while improvements to AICL itself remain open and shareable.
 
-⭐ Support the Project
+---
 
-If you find AICL useful:
+# Author
 
-Star ⭐ the repository
-Share with researchers and engineers
-Contribute modules or improvements
-Integrate AICL into your AI architecture
+**Vansh Bukkarwal**
 
-Let’s build open, modular, adaptive AI together.
+Creator of AICL and the LocalHouseLLM ecosystem.
+
+---
+
+## Vision
+
+AICL is being developed as a foundational communication layer for future modular AI systems, enabling independent components to collaborate through a unified protocol while remaining flexible, transparent, and extensible.
+
+If you're interested in modular AI, agent architectures, orchestration systems, or open AI infrastructure, you're in the right place.
