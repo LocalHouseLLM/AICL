@@ -1,55 +1,3 @@
-⚠️ Important Notice — Current Version Limitations & Upcoming AICL-X Update
-
-This release of AICL (v1.0.0) is fully functional for development, but it contains one known limitation:
-
-❗Known Issue: Import Resolution Bug (ModuleRegistry import error)
-
-The current package layout (AICL/ inside site-packages) may cause:
-ImportError: cannot import name 'ModuleRegistry' from 'AICL.registry'
-
-This occurs because the internal module structure and the Python package layout are not fully aligned yet.
-Functionality is intact, but certain from AICL import ... imports may fail depending on environment.
-
-A hotfix version will address this with:
-Corrected import paths
-Unified lowercase package namespace (aicl)
-Backward compatibility
-Clean, PEP-440 compliant install structure
-Automated module discovery
-
-Expected fix release: v1.0.1
-🚧 Upcoming Major Update — AICL-X (Extended Symbol Language)
-The next version (AICL-X) introduces the full symbolic communication language designed for modular AI:
-
-AICL-X will include:
-
-A new AICL Symbol Language (AICL-SL)
-Complete operator taxonomy (OP:MUL, OP:CLS, OP:RSN, etc.)
-String blocks (S:"...") and token dictionaries
-Compressed packet mode
-Binary codec (optional)
-Backward-compatible Packet API
-A formal grammar specification
-This update will transform AICL from a routing layer into a full AI-native communication protocol, powering ANVIRA and future modular LLM systems.
-
-🔮 What Users Should Expect
-
-✔ v1.0.x
-
-Fixes, stability, and proper pip import behavior.
-
-✔ v1.1.x
-
-Introduction of the AICL Symbol Language and encoder/decoder.
-
-✔ v2.x
-
-Binary AICL, inter-process adapters, and deeper ANVIRA compatibility.
-
-🙏 Thank You
-
-
-
 # AICL — Adaptive Inter-Module Communication Language
 ### High-Performance Communication Protocol for Modular AI Systems  
 **Author:** Vansh Bukkarwal — LocalHouseLLM Project  
@@ -236,7 +184,4 @@ Share with researchers and engineers
 Contribute modules or improvements
 Integrate AICL into your AI architecture
 
-
 Let’s build open, modular, adaptive AI together.
-
-

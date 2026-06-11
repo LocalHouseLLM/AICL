@@ -1,21 +1,75 @@
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires      = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
 
 [project]
-name = "AICL"
-version = "1.0.0"
-description = "Adaptive Inter-Module Communication Language for modular AI systems."
-authors = [
-    {name = "Vansh Bukkarwal", email = "localhousellm@gmail.com"}
+name            = "aicl"
+version         = "1.1.0"
+description     = "AICL — Adaptive Inter-Module Communication Language. A compact symbolic protocol for modular AI systems."
+readme          = "README.md"
+license         = { text = "MPL-2.0" }
+requires-python = ">=3.10"
+authors         = [
+    { name = "Vansh Bukkarwal", email = "localhousellm@proton.me" }
 ]
-license = {file = "LICENSE"}
-readme = "README.md"
-requires-python = ">=3.8"
-keywords = ["AI", "communication", "protocol", "modules", "router", "symbolic-language"]
+keywords = [
+    "aicl", "ai", "communication", "protocol", "modular-ai",
+    "symbolic-language", "llm", "anvira", "ama-mrl", "localhousellm",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
 
+# Zero mandatory dependencies (pure Python)
 dependencies = []
 
+[project.optional-dependencies]
+# Optional msgpack for binary serialization
+binary = ["msgpack>=1.0"]
+# Optional development tools
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "mypy",
+    "ruff",
+]
+# Full install
+all = ["aicl[binary,dev]"]
+
 [project.urls]
-Homepage = "https://github.com/LocalHouseLLM/AICL"
-Source = "https://github.com/LocalHouseLLM/AICL"
+Repository    = "https://github.com/localhousellm/AICL"
+Documentation = "https://github.com/localhousellm/AICL/blob/main/README.md"
+Issues        = "https://github.com/localhousellm/AICL/issues"
+
+[tool.setuptools.packages.find]
+where   = ["."]
+include = ["aicl*"]
+
+[tool.setuptools.package-data]
+aicl = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths    = ["tests"]
+addopts      = "-v --tb=short"
+python_files = ["test_*.py"]
+
+[tool.mypy]
+python_version = "3.10"
+strict         = false
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
